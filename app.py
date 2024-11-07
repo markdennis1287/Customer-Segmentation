@@ -9,7 +9,7 @@ from utils.plotting import create_segment_plots
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['ALLOWED_EXTENSIONS'] = {'csv'}
+app.config['ALLOWED_EXTENSIONS'] = {'csv', 'xlsx'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -29,8 +29,13 @@ def upload_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Read and preprocess data
-        data = pd.read_csv(filepath)
+        # Read data based on file extension
+        if filename.endswith('.csv'):
+            data = pd.read_csv(filepath)
+        elif filename.endswith('.xlsx'):
+            data = pd.read_excel(filepath)
+        
+        # Preprocess data
         preprocessed_data = preprocess_data(data)
 
         # Apply K-means clustering

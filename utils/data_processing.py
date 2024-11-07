@@ -3,14 +3,17 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 def preprocess_data(data):
-    # Drop any irrelevant or missing columns
-    data = data.dropna()
-    # Assuming relevant columns are 'age', 'income', 'spending_score', etc.
-    features = ['age', 'income', 'spending_score']
-    data = data[features]
+    # Filter relevant columns for segmentation
+    data = data[['CustomerID', 'Quantity', 'UnitPrice']].dropna()  # Adjust based on dataset structure
+    
+    # Aggregate data by CustomerID
+    data = data.groupby('CustomerID').agg({
+        'Quantity': 'sum',
+        'UnitPrice': 'mean'  # Average spending per customer
+    }).reset_index()
 
-    # Scale the data
+    # Feature scaling
     scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(data)
+    scaled_data = scaler.fit_transform(data[['Quantity', 'UnitPrice']])
     
     return scaled_data
