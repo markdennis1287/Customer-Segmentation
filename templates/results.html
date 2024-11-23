@@ -1,18 +1,14 @@
-<!-- templates/results.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Segmentation Results</title>
-</head>
-<body>
-    <h1>Customer Segmentation Results</h1>
-    <img src="{{ url_for('static', filename='segment_plot.png') }}" alt="Segmentation Plot">
-    <h2>Cluster Centers:</h2>
-    <ul>
-        {% for cluster in clusters %}
-            <li>{{ cluster }}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center">Segmentation Results</h2>
+<div class="text-center my-4">
+    <img src="{{ url_for('static', filename='segment_plot.png') }}" alt="Segmentation Plot" class="img-fluid">
+</div>
+<h3>Cluster Centers:</h3>
+<ul class="list-group">
+    {% for cluster in clusters %}
+        <li class="list-group-item">Cluster {{ loop.index }}: {{ cluster }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
