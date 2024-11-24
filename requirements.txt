@@ -20,6 +20,7 @@ Flask-OAuthlib
 Flask-Bcrypt
 Flask-Login
 Flask-Migrate
+Flask-Session
 Flask-SQLAlchemy
 Flask-WTF
 fonttools
