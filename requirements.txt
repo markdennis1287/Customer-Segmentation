@@ -1,6 +1,7 @@
 aiohttp
 aiosignal
 alembic
+authlib
 asgiref
 async-timeout
 attrs
