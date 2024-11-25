@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="text-center">Segmentation Results</h2>
-<div class="text-center my-4">
-    <img src="{{ url_for('static', filename='segment_plot.png') }}" alt="Segmentation Plot" class="img-fluid">
+<div class="mt-5">
+    <h2 class="text-center">Segmentation Results</h2>
+    <p class="text-center text-muted">Logged in as: {{ user_email }}</p>
+    <div class="text-center my-4">
+        <img src="{{ url_for('static', filename='segment_plot.png') }}" alt="Segmentation Plot" class="img-fluid shadow-lg">
+    </div>
+    <h3 class="mt-4">Cluster Centers:</h3>
+    <ul class="list-group list-group-flush mt-3">
+        {% for cluster in clusters %}
+            <li class="list-group-item">Cluster {{ loop.index }}: {{ cluster }}</li>
+        {% endfor %}
+    </ul>
 </div>
-<h3>Cluster Centers:</h3>
-<ul class="list-group">
-    {% for cluster in clusters %}
-        <li class="list-group-item">Cluster {{ loop.index }}: {{ cluster }}</li>
-    {% endfor %}
-</ul>
 {% endblock %}

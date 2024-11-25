@@ -11,7 +11,6 @@ from secrets import token_urlsafe
 from utils.data_processing import preprocess_data
 from utils.plotting import create_segment_plots
 
-load_dotenv()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -27,13 +26,18 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
-app.secret_key = '441e55d9425ac05da35b5e51b07c162328a66c905fcfa28c3d8abc5cdb632162'
+
+load_dotenv()
+print(f"Client ID: {os.getenv('GOOGLE_CLIENT_ID')}")
+print(f"Client Secret: {os.getenv('GOOGLE_CLIENT_SECRET')}")
+
+app.secret_key = os.getenv('SECRET_KEY')
 
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
-    client_id='GOOGLE_CLIENT_ID',
-    client_secret='GOOGLE_CLIENT_SECRET',
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
     access_token_url='https://oauth2.googleapis.com/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     api_base_url='https://openidconnect.googleapis.com/v1/',
@@ -41,32 +45,27 @@ google = oauth.register(
     client_kwargs={
         'scope': 'openid email profile',
         'prompt': 'select_account'
-    },
+    }
 )
 
 @app.route('/')
+def base():
+    print("Accessing / route")
+    if 'user_email' in session and 'logged_in' in session:
+        print("User logged in. Rendering index.html.")
+        return render_template('index.html', user_email=session.get('user_email'))
+    else:
+        print("Rendering base.html for non-logged-in user.")
+        return render_template('base.html', user_email=session.get('user_email'))
+
+@app.route('/index')
 def index():
-    user_email = session.get('user_email')
-    return render_template('index.html', user_email=user_email)
-
-@app.route('/login')
-def login():
-    nonce = token_urlsafe(16)
-    state = token_urlsafe(16)
-    session['nonce'] = nonce
-    session['state'] = state
-    print(f"Generated nonce: {nonce}")
-    print(f"Generated state: {state}")
-    
-    return google.authorize_redirect(
-        url_for('authorized', _external=True),
-        state=state
-    )
-
-@app.route('/logout')
-def logout():
-    session.pop('user_email', None)
-    return redirect(url_for('index'))
+    print("Accessing /index route")
+    if 'user_email' not in session:
+        print("User not logged in. Redirecting to /.")
+        return redirect(url_for('base'))
+    print(f"Rendering index.html for {session['user_email']}")
+    return render_template('index.html', user_email=session['user_email'])
 
 @app.route('/google/callback')
 def authorized():
@@ -91,11 +90,9 @@ def authorized():
         if not id_token:
             raise ValueError("Missing ID token in response")
 
-        # First try parsing the id_token
         user_info = google.parse_id_token(id_token, nonce=nonce)
         print(f"User info from ID token: {user_info}")
 
-        # Fallback to userinfo endpoint if email is missing
         if not user_info or 'email' not in user_info:
             user_info = google.get('userinfo').json()
             print(f"User info from endpoint: {user_info}")
@@ -104,16 +101,33 @@ def authorized():
             raise ValueError("User info is invalid or missing email")
 
         session['user_email'] = user_info['email']
+        session['logged_in'] = True
+        print(f"User email stored in session: {session['user_email']}")
         return redirect(url_for('index'))
     except Exception as e:
         import traceback
         traceback.print_exc()
         return f"Authentication failed: {e}", 500
 
+@app.route('/login')
+def login():
+    nonce = token_urlsafe(16)
+    state = token_urlsafe(16)
+    session['nonce'] = nonce
+    session['state'] = state
+    print(f"Generated nonce: {nonce}")
+    print(f"Generated state: {state}")
+    
+    return google.authorize_redirect(
+        url_for('authorized', _external=True),
+        state=state
+    )
 
-@app.route('/')
-def base():
-    return render_template('base.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_email', None)
+    return redirect(url_for('base'))
 
 
 @app.route('/upload', methods=['POST'])
@@ -127,20 +141,16 @@ def upload_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
-        # Read data based on file extension
         if filename.endswith('.csv'):
             data = pd.read_csv(filepath)
         elif filename.endswith('.xlsx'):
             data = pd.read_excel(filepath)
         
-        # Preprocess data
         preprocessed_data = preprocess_data(data)
 
-        # Apply K-means clustering
         model = KMeansSegmentation()
         clusters, labels = model.segment(preprocessed_data)
 
-        # Create plots
         plots = create_segment_plots(preprocessed_data, labels)
         
         return render_template('results.html', plots=plots, clusters=clusters)
