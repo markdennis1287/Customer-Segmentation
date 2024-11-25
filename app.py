@@ -25,8 +25,6 @@ Session(app)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-
-
 load_dotenv()
 print(f"Client ID: {os.getenv('GOOGLE_CLIENT_ID')}")
 print(f"Client Secret: {os.getenv('GOOGLE_CLIENT_SECRET')}")
@@ -66,6 +64,12 @@ def index():
         return redirect(url_for('base'))
     print(f"Rendering index.html for {session['user_email']}")
     return render_template('index.html', user_email=session['user_email'])
+
+@app.route('/results')
+def results():
+    if 'user_email' not in session:
+        return redirect(url_for('base'))
+    return render_template('results.html', user_email=session['user_email'])
 
 @app.route('/google/callback')
 def authorized():
@@ -122,6 +126,25 @@ def login():
         url_for('authorized', _external=True),
         state=state
     )
+
+@app.route('/help')
+def help_page():
+    return render_template('help.html')
+
+@app.route('/terms')
+def terms_of_service():
+    return render_template('terms_of_service.html')
+
+@app.route('/privacy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
+
+
+@app.context_processor
+def inject_user():
+    user_email = session.get('user_email', None)
+    return {'user_email': user_email}
 
 
 @app.route('/logout')

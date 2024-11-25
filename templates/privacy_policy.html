@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="display-5 text-center fw-bold">Privacy Policy</h1>
+    <p class="text-center text-muted">We value your privacy. Here’s how we handle your data.</p>
+
+    <div class="mt-4 shadow-sm p-4 bg-light rounded">
+        <h2 class="h5 fw-bold">Data Collection</h2>
+        <p class="mt-3">
+            Our app collects the following information to provide services:
+        </p>
+        <ul>
+            <li>
+                <strong>Uploaded Data:</strong> Files uploaded for segmentation analysis are stored temporarily and deleted after processing.
+            </li>
+            <li>
+                <strong>Account Information:</strong> If you log in, your email address is securely stored and only used for authentication.
+            </li>
+        </ul>
+
+        <h2 class="h5 fw-bold mt-4">Data Usage</h2>
+        <p class="mt-3">
+            Your data is processed to generate segmentation results. We do not share, sell, or use your uploaded files or email for any purpose beyond the app's functionality.
+        </p>
+
+        <h2 class="h5 fw-bold mt-4">Data Security</h2>
+        <p class="mt-3">
+            We implement secure protocols to protect your data from unauthorized access. However, users are advised to avoid uploading sensitive or confidential information.
+        </p>
+
+        <h2 class="h5 fw-bold mt-4">Third-Party Services</h2>
+        <p class="mt-3">
+            We use third-party tools such as Google OAuth for authentication. These tools adhere to strict privacy standards and do not access your uploaded data.
+        </p>
+
+        <h2 class="h5 fw-bold mt-4">Policy Updates</h2>
+        <p>
+            We reserve the right to update this policy at any time. Users will be notified of significant changes via updates on this page.
+        </p>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="/upload" class="btn btn-outline-primary">Back to Upload Page</a>
+    </div>
+</div>
+{% endblock %}

@@ -2,13 +2,45 @@
 
 {% block content %}
 <div class="text-center mt-5">
-    <h1 class="display-5">Upload Customer Data</h1>
-    <p class="text-muted">Upload your customer data file to perform segmentation analysis.</p>
-    <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4">
+    <h1 class="display-5 fw-bold">Upload Customer Data</h1>
+    <p class="text-muted">Upload your customer data file to perform segmentation analysis and gain valuable insights.</p>
+    
+    <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4 shadow-sm p-4 bg-light rounded">
         <div class="mb-3">
-            <input type="file" name="file" id="file" class="form-control">
+            <label for="file" class="form-label fw-bold">Choose a File</label>
+            <input type="file" name="file" id="file" class="form-control" required>
+            <small class="form-text text-muted">
+                Accepted formats: <strong>.csv, .xlsx</strong>. Ensure your data contains headers for proper analysis.
+            </small>
         </div>
-        <button type="submit" class="btn btn-success">Upload and Segment</button>
+        
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-cloud-upload-fill me-2"></i> Upload and Segment
+            </button>
+        </div>
     </form>
+
+    <div class="mt-4">
+        <p class="text-muted">
+            Need help? <a href="/help" class="text-decoration-none">Read the upload guide</a>.
+        </p>
+    </div>
 </div>
+
+<div id="uploadProgress" class="mt-5 d-none text-center">
+    <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Uploading...</span>
+    </div>
+    <p class="mt-3 fw-bold text-muted">Processing your file. Please wait...</p>
+</div>
+
+<script>
+    const form = document.querySelector('form');
+    const progress = document.getElementById('uploadProgress');
+
+    form.addEventListener('submit', (e) => {
+        progress.classList.remove('d-none');
+    });
+</script>
 {% endblock %}

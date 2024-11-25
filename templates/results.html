@@ -1,17 +1,34 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
 {% block content %}
 <div class="mt-5">
-    <h2 class="text-center">Segmentation Results</h2>
-    <p class="text-center text-muted">Logged in as: {{ user_email }}</p>
-    <div class="text-center my-4">
-        <img src="{{ url_for('static', filename='segment_plot.png') }}" alt="Segmentation Plot" class="img-fluid shadow-lg">
+    <div class="text-center">
+        <h2 class="fw-bold">Segmentation Results</h2>
+        <p class="text-muted">Here are the results of your segmentation analysis.</p>
     </div>
-    <h3 class="mt-4">Cluster Centers:</h3>
-    <ul class="list-group list-group-flush mt-3">
-        {% for cluster in clusters %}
-            <li class="list-group-item">Cluster {{ loop.index }}: {{ cluster }}</li>
-        {% endfor %}
-    </ul>
+
+    <div class="text-center my-4">
+        <h5 class="fw-bold text-muted mb-3">Visual Representation</h5>
+        <img src="{{ url_for('static', filename='segment_plot.png') }}" alt="Segmentation Plot" class="img-fluid shadow-lg rounded">
+    </div>
+
+    <div class="mt-4">
+        <h3 class="fw-bold">Cluster Centers</h3>
+        <p class="text-muted">Detailed information about the center of each cluster identified during segmentation.</p>
+        <ul class="list-group list-group-flush mt-3">
+            {% for cluster in clusters %}
+                <li class="list-group-item d-flex align-items-center">
+                    <span class="fw-bold me-3">Cluster {{ loop.index }}:</span>
+                    <span>{{ cluster }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="mt-5 text-center">
+        <p class="text-muted">
+            Want to analyze more data? <a href="/index" class="text-decoration-none">Upload a new dataset</a>.
+        </p>
+    </div>
 </div>
 {% endblock %}

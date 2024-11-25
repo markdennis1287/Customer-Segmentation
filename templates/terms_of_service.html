@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="display-5 text-center fw-bold">Terms of Service</h1>
+    <p class="text-center text-muted">Please read and agree to the terms before using the Customer Segmentation app.</p>
+
+    <div class="mt-4 shadow-sm p-4 bg-light rounded">
+        <h2 class="h5 fw-bold">Overview</h2>
+        <p>
+            Welcome to the Customer Segmentation app. By using our services, you agree to the following terms and conditions. Failure to comply with these terms may result in restricted access.
+        </p>
+        
+        <h2 class="h5 fw-bold mt-4">Key Terms</h2>
+        <ul class="mt-3">
+            <li>
+                <strong>Purpose:</strong> This app is intended for data segmentation and analysis for business or educational purposes.
+            </li>
+            <li>
+                <strong>Data Responsibility:</strong> Users are responsible for ensuring that any uploaded data is accurate and does not violate intellectual property or privacy laws.
+            </li>
+            <li>
+                <strong>Prohibited Use:</strong> You agree not to use this app for illegal activities, including unauthorized data scraping, misuse of results, or sharing harmful content.
+            </li>
+            <li>
+                <strong>Service Availability:</strong> We may update or modify the app to improve its functionality, which could result in temporary downtime.
+            </li>
+            <li>
+                <strong>Changes to Terms:</strong> We reserve the right to modify these terms at any time. Continued use implies agreement to updated terms.
+            </li>
+        </ul>
+
+        <h2 class="h5 fw-bold mt-4">Limitation of Liability</h2>
+        <p>
+            We are not liable for any loss, damage, or misinterpretation arising from the use of the app or its segmentation results.
+        </p>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="/upload" class="btn btn-outline-primary">Back to Upload Page</a>
+    </div>
+</div>
+{% endblock %}
