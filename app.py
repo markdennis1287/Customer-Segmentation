@@ -74,6 +74,8 @@ def results():
 
 @app.route('/google/callback')
 def authorized():
+    token = google.authorize_access_token()
+    print(f"Access token: {token}")
     try:
         received_state = request.args.get('state')
         stored_state = session.pop('state', None)
@@ -82,10 +84,7 @@ def authorized():
 
         if stored_state != received_state:
             raise ValueError("State parameter mismatch")
-
-        token = google.authorize_access_token()
-        print(f"Access token: {token}")
-
+        
         nonce = session.pop('nonce', None)
         if not nonce:
             raise ValueError("Missing nonce in session")
