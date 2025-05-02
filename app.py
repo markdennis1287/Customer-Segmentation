@@ -44,7 +44,7 @@ google = oauth.register(
         'scope': 'openid email profile',
         'prompt': 'select_account'
     },
-    redirect_uri='https://customer-segmentation-o8ml.onrender.com/google/callback'
+    redirect_uri=os.getenv('GOOGLE_REDIRECT_URI')
 )
 
 @app.route('/')
