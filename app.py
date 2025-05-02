@@ -43,7 +43,7 @@ google = oauth.register(
     client_kwargs={
         'scope': 'openid email profile',
         'prompt': 'select_account'
-    }
+    },
     redirect_uri='https://customer-segmentation-o8ml.onrender.com/google/callback'
 )
 
